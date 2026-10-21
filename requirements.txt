@@ -1,5 +1,5 @@
 streamlit
 ultralytics
-huggingface_hub
+huggingface_hub<2.0
 Pillow
 opencv-python-headless
