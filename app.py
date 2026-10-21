@@ -1,4 +1,24 @@
 
+import sys
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+# Custom AgroAct V5: learnable SiLU-Mish blend
+class AgroAct(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.w = nn.Parameter(torch.tensor(0.0))
+
+    def forward(self, x):
+        alpha = torch.sigmoid(self.w)
+        silu = F.silu(x)
+        mish = x * torch.tanh(F.softplus(x))
+        return alpha * silu + (1.0 - alpha) * mish
+
+# Make the class available to checkpoints saved as __main__.AgroAct
+sys.modules["__main__"].AgroAct = AgroAct
+
 import streamlit as st
 from PIL import Image
 from ultralytics import YOLO
